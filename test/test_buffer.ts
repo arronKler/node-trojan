@@ -1,0 +1,18 @@
+let buff = Buffer.from([
+  0x0d,
+  0x0a,
+  0x00,
+  0x00,
+  0x01,
+  0x02,
+  0x0d,
+  0x0a,
+  0x05,
+  0x07
+])
+/* let idx = buff.indexOf(Buffer.from([0x0d, 0x0a]))
+console.log(buff, Buffer.from([0x0a, 0x0d]))
+console.log('indx', idx)
+ */
+let buffs = Buffer.concat([buff, Buffer.from([0x0a, 0x0d])])
+console.log(buffs)

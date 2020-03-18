@@ -4,6 +4,16 @@
   "main": "index.js",
   "author": "arronKler <panzer9@126.com>",
   "license": "MIT",
+  "scripts": {
+    "server": "npx ts-node server/app.ts",
+    "test:server": "npx ts-node test/test_server.ts"
+  },
+  "keywords": [
+    "trojan",
+    "typescript",
+    "node"
+  ],
+  "repository": {},
   "devDependencies": {
     "@types/node": "^13.9.1",
     "typescript": "^3.8.3"
