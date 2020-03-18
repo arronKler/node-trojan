@@ -1,0 +1,11 @@
+{
+  "name": "node-trojan",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "arronKler <panzer9@126.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^13.9.1",
+    "typescript": "^3.8.3"
+  }
+}
