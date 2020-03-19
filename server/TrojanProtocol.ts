@@ -1,8 +1,19 @@
+enum E_CMD {
+  CONNECT = 0x01,
+  UDP = 0x03
+}
+
+enum E_ATYP {
+  IP4 = 0x01,
+  DOMAIN = 0x03,
+  IP6 = 0x04
+}
+
 export interface ITrojanRequest {
-  CMD: number
-  ATYP: number
-  ADDR: Buffer | string
-  PORT: Buffer | string | number
+  CMD: E_CMD
+  ATYP: E_ATYP
+  ADDR: string
+  PORT: number
 }
 
 export interface IHandshakeProtocol {
@@ -20,13 +31,13 @@ export default class TrojanProtocol {
   static parse(buff: Buffer): IHandshakeProtocol {
     let offset = 56
     let passwordBuff = buff.slice(0, offset)
-    let endTrojanRequstIdx = buff.indexOf(Buffer.from([0x0d, 0x0a]))
+    let endTrojanRequstIdx = buff.lastIndexOf(Buffer.from([0x0d, 0x0a]))
 
-    console.log('the buff', buff.slice(offset), Buffer.from([0x0d, 0x0a]))
     if (endTrojanRequstIdx < 0) {
-      console.error('not good')
+      console.error('Not valid')
+      throw Error('Not valid trojan protocol!')
     }
-    console.log('end', endTrojanRequstIdx)
+
     let trojanRequestBuff = buff.slice(offset + 2, endTrojanRequstIdx)
     let payloadBuff = buff.slice(endTrojanRequstIdx + 2)
 
@@ -35,8 +46,8 @@ export default class TrojanProtocol {
     )
 
     let proto: IHandshakeProtocol = {
-      password: passwordBuff,
-      payload: payloadBuff,
+      password: passwordBuff.toString(),
+      payload: payloadBuff.toString(),
       request: trojanRequest
     }
 
@@ -48,13 +59,14 @@ export default class TrojanProtocol {
     let cmd = buff[0]
     let atyp = buff[1]
 
-    let addr = buff.slice(2)
+    let addr = buff.slice(2, -2)
     let port = buff.slice(-2)
+
     return {
       CMD: cmd,
       ATYP: atyp,
-      ADDR: addr,
-      PORT: port.toString('utf8')
+      ADDR: addr.toString('utf8'),
+      PORT: port.readUInt16BE(0)
     }
   }
 }
