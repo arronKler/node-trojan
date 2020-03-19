@@ -1,3 +1,3 @@
 # Node Trojan
 
-This is just a implementation of trojan protocol.
+This is just an implementation of trojan protocol.
