@@ -31,6 +31,7 @@ export default class TrojanProtocol {
   static parse(buff: Buffer): IHandshakeProtocol {
     let offset = 56
     let passwordBuff = buff.slice(0, offset)
+
     let endTrojanRequstIdx = buff.lastIndexOf(Buffer.from([0x0d, 0x0a]))
 
     if (endTrojanRequstIdx < 0) {

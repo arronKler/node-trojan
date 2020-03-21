@@ -93,14 +93,16 @@ function createServerConn(
     const hash = crypto.createHash('sha224')
     hash.update('arronkler', 'utf8')
     let passwd = Buffer.from(hash.digest('hex'))
-    console.log('passwd: ', passwd.toString())
+
     let startBuff = Buffer.from([0x0d, 0x0a])
     let endBuff = Buffer.from([0x0d, 0x0a])
 
     let cmd = Buffer.from([0x01])
     let atyp = Buffer.from([0x03])
-    let dst = Buffer.from('127.0.0.1')
-    let port = Buffer.from(`${_port}`)
+    let dst = Buffer.from(_address)
+
+    let port = Buffer.alloc(2)
+    port.writeInt16BE(_port, 0)
     let requestBuff = Buffer.concat([cmd, atyp, dst, port])
 
     let payload = Buffer.from('AAAAA')
@@ -116,13 +118,15 @@ function createServerConn(
     console.log(totalBuff.byteLength, startBuff.byteLength, cmd.byteLength)
     console.log(port.toString(), port.byteLength)
 
-    // socket.write(totalBuff)
-    socket.write(Buffer.from('gjoshg'))
+    socket.write(totalBuff)
+    // socket.write(Buffer.from('gjoshg'))
     socket.once('data', chunk => {
       console.log('first chunk:', chunk.toString('utf8'))
       if (chunk.toString('utf8') == 'confirm') {
         // process.stdin.pipe(socket)
-        socket.end('GET / HTTP/1.0\n\n')
+        socket.pipe(_socket)
+        _socket.pipe(socket)
+
         socket.on('data', chunk => {
           console.log('get chunk', chunk.toString('utf8'))
         })

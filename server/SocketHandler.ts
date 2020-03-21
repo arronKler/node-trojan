@@ -33,8 +33,7 @@ export default class SocketHandler {
         console.log('Builded Tunel')
       }
     )
-    this.socket.write('confirm')
-    this.socket.pipe(client)
+
     this.socket.on('data', chunk => {
       console.log('user send:', chunk.toString('utf8'))
     })
@@ -47,13 +46,15 @@ export default class SocketHandler {
       console.log('server response:', chunk.toString('utf8'))
     })
 
-    client.pipe(this.socket)
     client.on('connect', () => {
       console.log('connnected')
+      this.socket.write('confirm')
+      client.pipe(this.socket)
+      this.socket.pipe(client)
     })
 
-    client.on('error', () => {
-      console.log('client error')
+    client.on('error', err => {
+      console.log('client error: ', err)
     })
   }
 
